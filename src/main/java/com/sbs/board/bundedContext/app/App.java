@@ -1,14 +1,17 @@
 package com.sbs.board.bundedContext.app;
 
+import com.sbs.board.bundedContext.article.dto.Article;
 import com.sbs.board.bundedContext.container.Container;
 
 import java.util.Scanner;
 
 public class App {
   public Scanner sc;
+  public int lastArticleId;
 
   public App() {
     sc = Container.sc;
+    lastArticleId = 0;
   }
 
   public void run() {
@@ -27,7 +30,10 @@ public class App {
         System.out.print("내용 : ");
         String subject = sc.nextLine();
 
-        int id = 1;
+        int id = ++lastArticleId;
+
+        Article article = new Article(id, title, subject);
+        System.out.println("생성 된 게시물 객체 : " + article);
         System.out.printf("%d번 게시물이 작성되었습니다.\n", id);
       } else if (cmd.equals("exit")) {
         System.out.println("프로그램을 종료합니다.");
