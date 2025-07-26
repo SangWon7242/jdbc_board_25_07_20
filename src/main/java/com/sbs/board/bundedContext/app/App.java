@@ -2,6 +2,7 @@ package com.sbs.board.bundedContext.app;
 
 import com.sbs.board.bundedContext.article.dto.Article;
 import com.sbs.board.bundedContext.container.Container;
+import com.sbs.board.global.simpleDb.SimpleDb;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -12,10 +13,15 @@ import java.util.Scanner;
 public class App {
   public Scanner sc;
   public List<Article> articles;
+  private SimpleDb simpleDb;
+
 
   public App() {
     sc = Container.sc;
     articles = new ArrayList<>();
+
+    simpleDb = new SimpleDb("localhost", "sbsst", "sbs123414", "JDBC_board");
+    simpleDb.setDevMode(true); // 개발 모드 활성화 (디버깅을 위해 SQL 쿼리 출력)
   }
 
   public void run() {

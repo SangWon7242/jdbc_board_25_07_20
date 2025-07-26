@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.implementation
+import org.gradle.kotlin.dsl.testImplementation
+
 plugins {
     id("java")
 }
@@ -14,6 +17,13 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 
     implementation("mysql:mysql-connector-java:8.0.33")
+
+    testImplementation("org.assertj:assertj-core:3.11.1")
+
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2") // LocalDatetime 지원
+
+    implementation("org.projectlombok:lombok:1.18.38")
 }
 
 tasks.test {
