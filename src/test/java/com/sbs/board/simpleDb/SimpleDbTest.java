@@ -35,6 +35,16 @@ public class SimpleDbTest {
   @Test
   @DisplayName("INSERT 테스트")
   public void t1() {
+    int no = 1;
+    String title = "제목 %d".formatted(no);
+    String content = "내용 %d".formatted(no);
 
+    simpleDb.run("""
+         INSERT INTO article
+          SET regDate = NOW(),
+          updateDate = NOW(),
+          title = ?,
+          content = ?
+        """, title, content);
   }
 }
