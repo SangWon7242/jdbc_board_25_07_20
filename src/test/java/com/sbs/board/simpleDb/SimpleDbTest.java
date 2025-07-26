@@ -1,8 +1,11 @@
 package com.sbs.board.simpleDb;
 
 import com.sbs.board.global.simpleDb.SimpleDb;
+import com.sbs.board.global.simpleDb.Sql;
 import org.junit.jupiter.api.*;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 @TestInstance(PER_CLASS)
@@ -39,6 +42,7 @@ public class SimpleDbTest {
     String title = "제목 %d".formatted(no);
     String content = "내용 %d".formatted(no);
 
+    /*
     simpleDb.run("""
          INSERT INTO article
           SET regDate = NOW(),
@@ -46,5 +50,21 @@ public class SimpleDbTest {
           title = ?,
           content = ?
         """, title, content);
+     */
+
+    Sql sql = simpleDb.genSql();
+    sql.append("INSERT INTO article");
+    sql.append("SET regDate = NOW()");
+    sql.append(", updateDate = NOW()");
+    sql.append(", title = ?", title);
+    sql.append(", content = ?", content);
+
+    long newId = sql.insert(); // Auto Increment ID 반환
+
+    // 들어온 번호가 0보다 큰지 확인
+    assertThat(newId).isGreaterThan(0);
+
+    // 들어온 번호가 1인지 확인
+    assertThat(newId).isEqualTo(1L);
   }
 }
