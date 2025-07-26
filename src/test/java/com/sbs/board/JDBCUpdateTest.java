@@ -2,7 +2,7 @@ package com.sbs.board;
 
 import java.sql.*;
 
-public class JDBUpdateTest {
+public class JDBCUpdateTest {
   public static void main(String[] args) {
     // 1. 데이터베이스 연결 정보 설정 (식당 주소와 예약 정보라고 생각하세요)
     String url = "jdbc:mysql://127.0.0.1:3306/JDBC_board?useSSL=false&autoReconnect=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useUnicode=true&allowPublicKeyRetrieval=true";
