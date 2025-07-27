@@ -7,6 +7,7 @@ import com.sbs.board.global.simpleDb.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ArticleController {
   private List<Article> articles;
@@ -34,5 +35,25 @@ public class ArticleController {
     long id = sql.insert();
 
     System.out.printf("%d번 게시물이 작성되었습니다.\n", id);
+  }
+
+  public void showList(Rq rq) {
+    Sql sql = rq.sql();
+    sql.append("SELECT *");
+    sql.append("FROM article");
+    sql.append("ORDER BY id DESC");
+
+    List<Map<String, Object>> articleRows = sql.selectRows();
+
+    System.out.println("== 게시글 목록 ==");
+    System.out.println("번호 | 제목 | 작성일");
+    System.out.println("-------------------");
+    articleRows.forEach(articleRow -> {
+      long id = (long) articleRow.get("id");
+      String title = (String) articleRow.get("title");
+      String regDate = articleRow.get("regDate").toString();
+
+      System.out.printf("%d | %s | %s\n", id, title, regDate);
+    });
   }
 }
