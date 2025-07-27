@@ -29,8 +29,6 @@ public class Rq {
   @Setter
   private String actionMethodName;
 
-  private Sql sql;
-
   public String getActionPath() {
     String[] commandBits = urlPath.split("/");
 
@@ -46,12 +44,10 @@ public class Rq {
     return "/%s/%s/%s".formatted(controllerTypeCode, controllerName, actionMethodName);
   }
 
-  public void setCommand(String url, SimpleDb simpleDb) {
+  public void setCommand(String url) {
     this.url = url;
     params = Ut.getParamsFromUrl(this.url);
     urlPath = Ut.getPathFromUrl(this.url);
-
-    sql = simpleDb.genSql();
   }
 
   public long getLongParam(String paramName, long defaultValue) {
@@ -70,9 +66,5 @@ public class Rq {
     if (!params.containsKey(paramName)) return defaultValue;
 
     return params.get(paramName);
-  }
-
-  public Sql sql() {
-    return sql;
   }
 }

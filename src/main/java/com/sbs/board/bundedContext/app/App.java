@@ -6,18 +6,15 @@ import com.sbs.board.bundedContext.container.Container;
 import com.sbs.board.global.base.Rq;
 import com.sbs.board.global.simpleDb.SimpleDb;
 
-import java.util.Scanner;
-
 public class App {
-  private Scanner sc;
   private SimpleDb simpleDb;
   private ArticleController articleController;
 
   public App() {
-    sc = Container.sc;
-
     simpleDb = new SimpleDb("localhost", "sbsst", "sbs123414", "JDBC_board");
     simpleDb.setDevMode(true); // 개발 모드 활성화 (디버깅을 위해 SQL 쿼리 출력)
+
+    Container.init(simpleDb);
 
     articleController = Container.articleController;
   }
@@ -29,9 +26,9 @@ public class App {
       Rq rq = new Rq();
 
       System.out.print("명령어) ");
-      String cmd = sc.nextLine().trim();
+      String cmd = Container.sc.nextLine().trim();
 
-      rq.setCommand(cmd, simpleDb);
+      rq.setCommand(cmd);
 
       Controller controller = getControllerByUrl(rq.getUrlPath());
 
@@ -44,7 +41,7 @@ public class App {
     }
 
     System.out.println("== 게시판 프로그램 끝 =");
-    sc.close();
+    Container.sc.close();
   }
 
   private Controller getControllerByUrl(String urlPath) {

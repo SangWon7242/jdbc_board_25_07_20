@@ -35,17 +35,24 @@ public class ArticleController implements Controller {
       return;
     }
 
-    Sql sql = rq.sql();
+    Sql sql = Container.simpleDb.genSql();
+    sql.append("SELECT COUNT(*) > 0");
+    sql.append("FROM article");
+    sql.append("WHERE id = ?", id);
+
+    boolean isExist = sql.selectBoolean();
+
+    if(!isExist) {
+      System.out.printf("%d번 게시글은 존재하지 않습니다.\n", id);
+      return;
+    }
+
+    sql = Container.simpleDb.genSql();
     sql.append("SELECT *");
     sql.append("FROM article");
     sql.append("WHERE id = ?", id);
 
     Map<String, Object> articleRow = sql.selectRow();
-
-    if(articleRow == null) {
-      System.out.printf("%d번 게시글은 존재하지 않습니다.\n", id);
-      return;
-    }
 
     System.out.println("== 게시글 상세 ==");
     System.out.printf("번호 : %d\n", (long) articleRow.get("id"));
@@ -65,7 +72,7 @@ public class ArticleController implements Controller {
     System.out.print("내용 : ");
     String content = Container.sc.nextLine();
 
-    Sql sql = rq.sql();
+    Sql sql = Container.simpleDb.genSql();
     sql.append("INSERT INTO article");
     sql.append("SET regDate = NOW()");
     sql.append(", updateDate = NOW()");
@@ -78,7 +85,7 @@ public class ArticleController implements Controller {
   }
 
   public void showList(Rq rq) {
-    Sql sql = rq.sql();
+    Sql sql = Container.simpleDb.genSql();
     sql.append("SELECT *");
     sql.append("FROM article");
     sql.append("ORDER BY id DESC");
