@@ -169,4 +169,23 @@ public class SimpleDbTest {
     assertThat(articleRow.get("title")).isEqualTo("제목 1");
     assertThat(articleRow.get("content")).isEqualTo("내용 1");
   }
+
+  @Test
+  @DisplayName("SELECT 테스트 4 : 원하는 게시물 유무 확인")
+  public void t5() {
+    Sql sql = simpleDb.genSql();
+
+    /*
+    SELECT COUNT(*) > 0
+    FROM article
+    WHERE id = 1;
+    */
+
+    sql.append("SELECT COUNT(*) > 0")
+        .append("FROM article")
+        .append("WHERE id = ?", 6);
+
+    boolean isExists = sql.selectBoolean();
+    assertThat(isExists).isEqualTo(false);
+  }
 }
