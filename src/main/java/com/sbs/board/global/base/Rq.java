@@ -1,5 +1,7 @@
 package com.sbs.board.global.base;
 
+import com.sbs.board.global.simpleDb.SimpleDb;
+import com.sbs.board.global.simpleDb.Sql;
 import com.sbs.board.global.util.Ut;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,15 +19,17 @@ public class Rq {
 
   @Getter
   @Setter
-  String controllerTypeCode;
+  private String controllerTypeCode;
 
   @Getter
   @Setter
-  String controllerName;
+  private String controllerName;
 
   @Getter
   @Setter
-  String actionMethodName;
+  private String actionMethodName;
+
+  private Sql sql;
 
   public String getActionPath() {
     String[] commandBits = urlPath.split("/");
@@ -42,10 +46,12 @@ public class Rq {
     return "/%s/%s/%s".formatted(controllerTypeCode, controllerName, actionMethodName);
   }
 
-  public void setCommand(String url) {
+  public void setCommand(String url, SimpleDb simpleDb) {
     this.url = url;
     params = Ut.getParamsFromUrl(this.url);
     urlPath = Ut.getPathFromUrl(this.url);
+
+    sql = simpleDb.genSql();
   }
 
   public int getIntParam(String paramName, int defaultValue) {
@@ -64,5 +70,9 @@ public class Rq {
     if (!params.containsKey(paramName)) return defaultValue;
 
     return params.get(paramName);
+  }
+
+  public Sql sql() {
+    return sql;
   }
 }

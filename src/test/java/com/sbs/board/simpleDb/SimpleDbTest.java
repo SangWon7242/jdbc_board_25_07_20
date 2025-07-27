@@ -5,7 +5,6 @@ import com.sbs.board.global.simpleDb.Sql;
 import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 @TestInstance(PER_CLASS)
@@ -19,6 +18,11 @@ public class SimpleDbTest {
     simpleDb.setDevMode(true); // 개발 모드 활성화 (디버깅을 위해 SQL 쿼리 출력)
 
     createArticleTable();
+  }
+
+  @BeforeEach // 각 테스트 메서드 실행 전에 실행
+  public void beforeEach() {
+    simpleDb.run("TRUNCATE article"); // article 테이블 초기화
   }
 
   private void createArticleTable() {
