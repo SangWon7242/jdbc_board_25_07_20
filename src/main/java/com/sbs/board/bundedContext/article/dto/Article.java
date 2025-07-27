@@ -15,10 +15,4 @@ public class Article {
   private LocalDateTime updateDate;
   private String title;
   private String content;
-
-  public Article(long id, String title, String content) {
-    this.id = id;
-    this.title = title;
-    this.content = content;
-  }
 }

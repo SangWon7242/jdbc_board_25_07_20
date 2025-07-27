@@ -4,9 +4,11 @@ import com.sbs.board.global.simpleDb.SimpleDb;
 import com.sbs.board.global.simpleDb.Sql;
 import org.junit.jupiter.api.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 @TestInstance(PER_CLASS)
@@ -87,5 +89,35 @@ public class SimpleDbTest {
 
     // 들어온 번호가 0보다 큰지 확인
     assertThat(newId).isGreaterThan(0);
+  }
+
+  @Test
+  @DisplayName("SELECT 테스트 1 : 정순 조회")
+  public void t2() {
+
+    Sql sql = simpleDb.genSql();
+    sql.append("SELECT *");
+    sql.append("FROM article");
+    sql.append("ORDER BY id ASC");
+
+    List<Map<String, Object>> articleRows = sql.selectRows();
+
+    // 정순 체크
+    IntStream.range(0, articleRows.size()).forEach(i -> {
+      long id = i + 1;
+
+      Map<String, Object> articleRow = articleRows.get(i);
+
+      // isInstanceOf : LocalDateTime 타입인지 확인
+      assertThat(articleRow.get("id")).isEqualTo(id);
+      assertThat(articleRow.get("regDate")).isInstanceOf(LocalDateTime.class);
+      assertThat(articleRow.get("regDate")).isNotNull();
+      assertThat(articleRow.get("updateDate")).isInstanceOf(LocalDateTime.class);
+      assertThat(articleRow.get("updateDate")).isNotNull();
+      assertThat(articleRow.get("title")).isEqualTo("제목 %d".formatted(id));
+      assertThat(articleRow.get("content")).isEqualTo("내용 %d".formatted(id));
+    });
+
+    assertThat(articleRows.size()).isEqualTo(5);
   }
 }
