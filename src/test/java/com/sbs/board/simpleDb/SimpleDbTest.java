@@ -188,4 +188,23 @@ public class SimpleDbTest {
     boolean isExists = sql.selectBoolean();
     assertThat(isExists).isEqualTo(false);
   }
+
+  @Test
+  @DisplayName("UPDATE 테스트")
+  public void t6() {
+    Sql sql = simpleDb.genSql();
+
+    /*
+    UPDATE article
+    SET title = 'new 제목'
+    WHERE id IN (1, 2, 3, 4);
+    */
+
+    sql.append("UPDATE article")
+        .append("SET title = ?", "new 제목")
+        .append("WHERE id IN (?, ?, ?, ?)", 1, 2, 3, 4);
+
+    long affectedRowsCount = sql.update();
+    assertThat(affectedRowsCount).isEqualTo(4);
+  }
 }
