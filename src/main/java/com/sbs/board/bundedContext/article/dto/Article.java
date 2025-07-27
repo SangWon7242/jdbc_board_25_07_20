@@ -1,18 +1,14 @@
 package com.sbs.board.bundedContext.article.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import com.sbs.board.bundedContext.common.BaseDto;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Article {
-  private long id;
-  private LocalDateTime regDate;
-  private LocalDateTime updateDate;
+@Getter
+@Setter
+@ToString
+public class Article extends BaseDto {
   private String title;
   private String content;
 }
