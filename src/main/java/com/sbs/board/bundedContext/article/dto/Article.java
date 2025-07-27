@@ -1,6 +1,6 @@
 package com.sbs.board.bundedContext.article.dto;
 
-import com.sbs.board.bundedContext.common.BaseDto;
+import com.sbs.board.bundedContext.common.dto.BaseDto;
 import lombok.*;
 
 @AllArgsConstructor

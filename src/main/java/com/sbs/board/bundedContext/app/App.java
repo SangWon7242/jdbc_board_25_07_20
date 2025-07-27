@@ -1,6 +1,7 @@
 package com.sbs.board.bundedContext.app;
 
 import com.sbs.board.bundedContext.article.controller.ArticleController;
+import com.sbs.board.bundedContext.common.controller.Controller;
 import com.sbs.board.bundedContext.container.Container;
 import com.sbs.board.global.base.Rq;
 import com.sbs.board.global.simpleDb.SimpleDb;
@@ -32,19 +33,25 @@ public class App {
 
       rq.setCommand(cmd, simpleDb);
 
-      if (cmd.equals("/usr/article/write")) {
-        articleController.doWrite(rq);
-      } else if (cmd.equals("/usr/article/list")) {
-        articleController.showList(rq);
+      Controller controller = getControllerByUrl(rq.getUrlPath());
+
+      if(controller != null) {
+        controller.performAction(rq);
       } else if (cmd.equals("exit")) {
         System.out.println("프로그램을 종료합니다.");
         break;
-      } else {
-        System.out.println("알 수 없는 명령어입니다.");
       }
     }
 
     System.out.println("== 게시판 프로그램 끝 =");
     sc.close();
+  }
+
+  private Controller getControllerByUrl(String urlPath) {
+    if( urlPath.startsWith("/usr/article")) {
+      return articleController;
+    }
+
+    return null;
   }
 }

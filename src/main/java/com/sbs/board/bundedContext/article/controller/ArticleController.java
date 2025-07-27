@@ -1,6 +1,7 @@
 package com.sbs.board.bundedContext.article.controller;
 
 import com.sbs.board.bundedContext.article.dto.Article;
+import com.sbs.board.bundedContext.common.controller.Controller;
 import com.sbs.board.bundedContext.container.Container;
 import com.sbs.board.global.base.Rq;
 import com.sbs.board.global.simpleDb.Sql;
@@ -9,11 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ArticleController {
+public class ArticleController implements Controller {
   private List<Article> articles;
 
   public ArticleController() {
     articles = new ArrayList<>();
+  }
+
+  @Override
+  public void performAction(Rq rq) {
+    switch (rq.getUrlPath()) {
+      case "/usr/article/write" -> doWrite(rq);
+      case "/usr/article/list" -> showList(rq);
+      default -> System.out.println("알 수 없는 명령어입니다.");
+    }
   }
 
   public void doWrite(Rq rq) {
