@@ -23,8 +23,58 @@ public class ArticleController implements Controller {
       case "/usr/article/write" -> doWrite(rq);
       case "/usr/article/list" -> showList(rq);
       case "/usr/article/detail" -> showDetail(rq);
+      case "/usr/article/modify" -> doModify(rq);
       default -> System.out.println("알 수 없는 명령어입니다.");
     }
+  }
+
+  private void doModify(Rq rq) {
+    long id = rq.getLongParam("id", 0);
+
+    if(id == 0) {
+      System.out.println("올바른 값을 입력해주세요.");
+      return;
+    }
+
+    Sql sql = Container.simpleDb.genSql();
+    sql.append("SELECT COUNT(*) > 0");
+    sql.append("FROM article");
+    sql.append("WHERE id = ?", id);
+
+    boolean isExist = sql.selectBoolean();
+
+    if(!isExist) {
+      System.out.printf("%d번 게시글은 존재하지 않습니다.\n", id);
+      return;
+    }
+
+    System.out.println("== 게시글 수정 ==");
+    System.out.print("제목 : ");
+    String title = Container.sc.nextLine();
+
+    if(title == null || title.trim().isEmpty()) {
+      System.out.println("제목을 입력해주세요.");
+      return;
+    }
+
+    System.out.print("내용 : ");
+    String content = Container.sc.nextLine();
+
+    if(content == null || content.trim().isEmpty()) {
+      System.out.println("내용을 입력해주세요.");
+      return;
+    }
+
+    sql = Container.simpleDb.genSql();
+    sql.append("UPDATE article");
+    sql.append("SET updateDate = NOW()");
+    sql.append(", title = ?", title);
+    sql.append(", content = ?", content);
+    sql.append("WHERE id = ?", id);
+
+    sql.update();
+
+    System.out.printf("%d번 게시글이 수정되었습니다.\n", id);
   }
 
   private void showDetail(Rq rq) {
