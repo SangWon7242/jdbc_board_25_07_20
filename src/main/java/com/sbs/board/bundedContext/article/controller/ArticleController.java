@@ -22,8 +22,38 @@ public class ArticleController implements Controller {
     switch (rq.getUrlPath()) {
       case "/usr/article/write" -> doWrite(rq);
       case "/usr/article/list" -> showList(rq);
+      case "/usr/article/detail" -> showDetail(rq);
       default -> System.out.println("알 수 없는 명령어입니다.");
     }
+  }
+
+  private void showDetail(Rq rq) {
+    long id = rq.getLongParam("id", 0);
+
+    if(id == 0) {
+      System.out.println("올바른 값을 입력해주세요.");
+      return;
+    }
+
+    Sql sql = rq.sql();
+    sql.append("SELECT *");
+    sql.append("FROM article");
+    sql.append("WHERE id = ?", id);
+
+    Map<String, Object> articleRow = sql.selectRow();
+
+    if(articleRow == null) {
+      System.out.printf("%d번 게시글은 존재하지 않습니다.\n", id);
+      return;
+    }
+
+    System.out.println("== 게시글 상세 ==");
+    System.out.printf("번호 : %d\n", (long) articleRow.get("id"));
+    System.out.printf("제목 : %s\n",  articleRow.get("title"));
+    System.out.printf("내용 : %s\n",  articleRow.get("content"));
+    System.out.printf("작성일 : %s\n", articleRow.get("regDate"));
+    System.out.printf("수정일 : %s\n", articleRow.get("updateDate"));
+
   }
 
   public void doWrite(Rq rq) {

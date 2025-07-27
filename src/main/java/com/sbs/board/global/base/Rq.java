@@ -54,13 +54,13 @@ public class Rq {
     sql = simpleDb.genSql();
   }
 
-  public int getIntParam(String paramName, int defaultValue) {
+  public long getLongParam(String paramName, long defaultValue) {
     if (!params.containsKey(paramName)) {
       return defaultValue;
     }
 
     try {
-      return Integer.parseInt(params.get(paramName));
+      return Long.parseLong(params.get(paramName));
     } catch (NumberFormatException e) {
       return defaultValue;
     }
