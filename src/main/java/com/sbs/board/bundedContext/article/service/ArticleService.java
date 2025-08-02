@@ -19,11 +19,11 @@ public class ArticleService {
     return articleRepository.save(title, content);
   }
 
-  public List<Map<String, Object>> findByOrderByIdDesc() {
+  public List<Article> findByOrderByIdDesc() {
     return articleRepository.findByOrderByIdDesc();
   }
 
-  public Map<String, Object> findById(long id) {
+  public Article findById(long id) {
     return articleRepository.findById(id);
   }
 

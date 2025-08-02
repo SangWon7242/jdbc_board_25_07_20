@@ -28,34 +28,30 @@ public class ArticleRepository {
     return id;
   }
 
-  public List<Map<String, Object>> findByOrderByIdDesc() {
+  public List<Article> findByOrderByIdDesc() {
     Sql sql = Container.simpleDb.genSql();
     sql.append("SELECT *");
     sql.append("FROM article");
     sql.append("ORDER BY id DESC");
 
-    List<Map<String, Object>> articleRows = sql.selectRows();
+    List<Article> articles = sql.selectRows(Article.class);
 
-    if(articleRows == null) {
-      return null;
-    }
+    if(articles == null) return null;
 
-    return articleRows;
+    return articles;
   }
 
-  public Map<String, Object> findById(long id) {
+  public Article findById(long id) {
     Sql sql = Container.simpleDb.genSql();
     sql.append("SELECT *");
     sql.append("FROM article");
     sql.append("WHERE id = ?", id);
 
-    Map<String, Object> articleMap = sql.selectRow();
+    Article article = sql.selectRow(Article.class);
 
-    if(articleMap == null) {
-      return null;
-    }
+    if(article == null) return null;
 
-    return articleMap;
+    return article;
   }
 
   public void update(long id, String title, String content) {
