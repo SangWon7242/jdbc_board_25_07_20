@@ -3,6 +3,7 @@ package com.sbs.board.bundedContext.member.controller;
 
 import com.sbs.board.bundedContext.common.controller.Controller;
 import com.sbs.board.bundedContext.container.Container;
+import com.sbs.board.bundedContext.member.service.MemberService;
 import com.sbs.board.global.base.Rq;
 import com.sbs.board.global.simpleDb.Sql;
 
@@ -11,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MemberController implements Controller {
-  private List<Member> members;
+  private MemberService memberService;
 
   public MemberController() {
-    members = new ArrayList<>();
+    memberService = Container.memberService;
   }
 
   @Override
@@ -44,12 +45,7 @@ public class MemberController implements Controller {
         continue;
       }
 
-      Sql sql = Container.simpleDb.genSql();
-      sql.append("SELECT *");
-      sql.append("FROM member");
-      sql.append("WHERE username = ?", username);
-
-      member = sql.selectRow(Member.class);
+      member = memberService.findByUsername(username);
 
       if(member != null) {
         System.out.println("이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.");
@@ -102,17 +98,8 @@ public class MemberController implements Controller {
       break;
     }
 
-    // 회원 정보 저장
-    Sql sql = Container.simpleDb.genSql();
-    sql.append("INSERT INTO `member`");
-    sql.append("SET regDate = NOW()");
-    sql.append(", updateDate = NOW()");
-    sql.append(", username = ?", username);
-    sql.append(", password = ?", password);
-    sql.append(", name = ?", name);
+    memberService.create(username, password, name);
 
-    long id = sql.insert();
-
-    System.out.printf("%d번 회원이 가입되었습니다.\n", id);
+    System.out.println("회원이 가입되었습니다.");
   }
 }
