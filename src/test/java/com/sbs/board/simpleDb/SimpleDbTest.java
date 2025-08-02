@@ -207,4 +207,16 @@ public class SimpleDbTest {
     long affectedRowsCount = sql.update();
     assertThat(affectedRowsCount).isEqualTo(4);
   }
+
+  @Test
+  @DisplayName("DELETE 테스트")
+  public void t7() {
+    // DELETE FROM article WHERE id = 1;
+    Sql sql = simpleDb.genSql();
+    sql.append("DELETE FROM article")
+        .append("WHERE id = ?", 1);
+
+    long affectedRowsCount = sql.delete();
+    assertThat(affectedRowsCount).isEqualTo(1);
+  }
 }
