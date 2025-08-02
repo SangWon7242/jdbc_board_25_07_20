@@ -30,6 +30,8 @@ public class SimpleDbTest {
     simpleDb.run("TRUNCATE article"); // article 테이블 초기화
 
     makeArticleTestData(); // 테스트 데이터 생성
+
+    createMemberTable();
   }
 
   private void makeArticleTestData() {
@@ -58,6 +60,21 @@ public class SimpleDbTest {
         	updateDate DATETIME NOT NULL,
         	title CHAR(100) NOT NULL,
         	content TEXT NOT NULL
+        )
+        """);
+  }
+
+  private void createMemberTable() {
+    simpleDb.run("DROP TABLE IF EXISTS member");
+
+    simpleDb.run("""
+        CREATE TABLE `member` (
+        	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        	regDate DATETIME NOT NULL,
+        	updateDate DATETIME NOT NULL,
+        	username CHAR(50) UNIQUE NOT NULL,
+        	password CHAR(150) NOT NULL,
+        	name CHAR(50) NOT NULL
         )
         """);
   }
@@ -271,5 +288,25 @@ public class SimpleDbTest {
     assertThat(article.getUpdateDate()).isNotNull();
     assertThat(article.getTitle()).isEqualTo("제목 1");
     assertThat(article.getContent()).isEqualTo("내용 1");
+  }
+
+  @Test
+  @DisplayName("회원 1명 추가")
+  public void t10() {
+    String username = "user1";
+    String password = "1234";
+    String name = "홍길동";
+
+    Sql sql = simpleDb.genSql();
+    sql.append("INSERT INTO `member`");
+    sql.append("SET regDate = NOW()");
+    sql.append(", updateDate = NOW()");
+    sql.append(", username = ?", username);
+    sql.append(", password = ?", password);
+    sql.append(", name = ?", name);
+
+    long newId = sql.insert();
+
+    assertThat(newId).isEqualTo(1L);
   }
 }

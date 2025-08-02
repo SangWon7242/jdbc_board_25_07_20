@@ -11,4 +11,6 @@ public abstract class BaseDto {
   protected long id;
   protected LocalDateTime regDate;
   protected LocalDateTime updateDate;
+
+
 }
