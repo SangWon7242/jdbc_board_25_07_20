@@ -48,6 +48,9 @@ public class App {
     if( urlPath.startsWith("/usr/article")) {
       return articleController;
     }
+    else if( urlPath.startsWith("/usr/member")) {
+      return Container.memberController;
+    }
 
     return null;
   }

@@ -7,7 +7,6 @@ import com.sbs.board.bundedContext.container.Container;
 import com.sbs.board.global.base.Rq;
 
 import java.util.List;
-import java.util.Map;
 
 public class ArticleController implements Controller {
   private ArticleService articleService;
