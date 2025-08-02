@@ -6,7 +6,7 @@ import com.sbs.board.bundedContext.container.Container;
 import com.sbs.board.global.base.Rq;
 import com.sbs.board.global.simpleDb.Sql;
 
-import java.lang.reflect.Member;
+import com.sbs.board.bundedContext.member.dto.Member;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class MemberController implements Controller {
     String password;
     String passwordConfirm;
     String name;
-
+    Member member;
 
     System.out.println("== 회원 가입 ===");
 
@@ -41,6 +41,18 @@ public class MemberController implements Controller {
 
       if(username.trim().isEmpty()) {
         System.out.println("아이디를 입력해주세요.");
+        continue;
+      }
+
+      Sql sql = Container.simpleDb.genSql();
+      sql.append("SELECT *");
+      sql.append("FROM member");
+      sql.append("WHERE username = ?", username);
+
+      member = sql.selectRow(Member.class);
+
+      if(member != null) {
+        System.out.println("이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.");
         continue;
       }
 
