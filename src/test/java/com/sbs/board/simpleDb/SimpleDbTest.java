@@ -1,5 +1,6 @@
 package com.sbs.board.simpleDb;
 
+import com.sbs.board.bundedContext.article.dto.Article;
 import com.sbs.board.global.simpleDb.SimpleDb;
 import com.sbs.board.global.simpleDb.Sql;
 import org.junit.jupiter.api.*;
@@ -218,5 +219,34 @@ public class SimpleDbTest {
 
     long affectedRowsCount = sql.delete();
     assertThat(affectedRowsCount).isEqualTo(1);
+  }
+
+  @Test
+  @DisplayName("selectRows, Article")
+  public void t8() {
+    Sql sql = simpleDb.genSql();
+    sql.append("SELECT *")
+        .append("FROM article")
+        .append("ORDER BY id ASC");
+
+    // DB에서 데이틑 2차원으로 날라옴
+    // selectRows로 가져온 데이터를 Article 객체로 변환
+    List<Article> articles = sql.selectRows(Article.class);
+
+    // 정순 체크
+    IntStream.range(0, articles.size()).forEach(i -> {
+      long id = i + 1;
+
+      Article article = articles.get(i);
+
+      // isInstanceOf : LocalDateTime 타입인지 확인
+      assertThat(article.getId()).isEqualTo(id);
+      assertThat(article.getRegDate()).isInstanceOf(LocalDateTime.class);
+      assertThat(article.getRegDate()).isNotNull();
+      assertThat(article.getUpdateDate()).isInstanceOf(LocalDateTime.class);
+      assertThat(article.getUpdateDate()).isNotNull();
+      assertThat(article.getTitle()).isEqualTo("제목 %d".formatted(id));
+      assertThat(article.getContent()).isEqualTo("내용 %d".formatted(id));
+    });
   }
 }
