@@ -103,8 +103,8 @@ public class ArticleController implements Controller {
     System.out.printf("번호 : %d\n", article.getId());
     System.out.printf("제목 : %s\n",  article.getTitle());
     System.out.printf("내용 : %s\n",  article.getContent());
-    System.out.printf("작성일 : %s\n", article.getRegDate());
-    System.out.printf("수정일 : %s\n", article.getUpdateDate());
+    System.out.printf("작성일 : %s\n", article.getFormatRegDate());
+    System.out.printf("수정일 : %s\n", article.getFormatUpdateDate());
   }
 
   public void doWrite(Rq rq) {
@@ -135,7 +135,7 @@ public class ArticleController implements Controller {
     articles.forEach(article -> {
       long id = article.getId();
       String title = article.getTitle();
-      String regDate = article.getContent();
+      String regDate = article.getFormatRegDate();
 
       System.out.printf("%d | %s | %s\n", id, title, regDate);
     });
