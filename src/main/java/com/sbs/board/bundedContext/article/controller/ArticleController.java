@@ -24,8 +24,38 @@ public class ArticleController implements Controller {
       case "/usr/article/list" -> showList(rq);
       case "/usr/article/detail" -> showDetail(rq);
       case "/usr/article/modify" -> doModify(rq);
+      case "/usr/article/delete" -> deDelete(rq);
       default -> System.out.println("알 수 없는 명령어입니다.");
     }
+  }
+
+  private void deDelete(Rq rq) {
+    long id = rq.getLongParam("id", 0);
+
+    if(id == 0) {
+      System.out.println("올바른 값을 입력해주세요.");
+      return;
+    }
+
+    Sql sql = Container.simpleDb.genSql();
+    sql.append("SELECT COUNT(*) > 0");
+    sql.append("FROM article");
+    sql.append("WHERE id = ?", id);
+
+    boolean isExist = sql.selectBoolean();
+
+    if(!isExist) {
+      System.out.printf("%d번 게시글은 존재하지 않습니다.\n", id);
+      return;
+    }
+
+    sql = Container.simpleDb.genSql();
+    sql.append("DELETE FROM article");
+    sql.append("WHERE id = ?", id);
+
+    sql.delete();
+
+    System.out.printf("%d번 게시글이 삭제되었습니다.\n", id);
   }
 
   private void doModify(Rq rq) {
