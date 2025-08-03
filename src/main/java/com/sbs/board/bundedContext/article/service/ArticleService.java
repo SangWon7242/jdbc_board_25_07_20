@@ -5,8 +5,6 @@ import com.sbs.board.bundedContext.article.repository.ArticleRepository;
 import com.sbs.board.bundedContext.container.Container;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public class ArticleService {
   private ArticleRepository articleRepository;
@@ -15,8 +13,8 @@ public class ArticleService {
     articleRepository = Container.articleRepository;
   }
 
-  public long create(String title, String content) {
-    return articleRepository.save(title, content);
+  public long create(String title, String content, long memberId) {
+    return articleRepository.save(title, content, memberId);
   }
 
   public List<Article> findByOrderByIdDesc() {

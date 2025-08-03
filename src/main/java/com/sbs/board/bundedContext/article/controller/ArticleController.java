@@ -4,6 +4,7 @@ import com.sbs.board.bundedContext.article.dto.Article;
 import com.sbs.board.bundedContext.article.service.ArticleService;
 import com.sbs.board.bundedContext.common.controller.Controller;
 import com.sbs.board.bundedContext.container.Container;
+import com.sbs.board.bundedContext.member.dto.Member;
 import com.sbs.board.global.base.Rq;
 
 import java.util.List;
@@ -28,6 +29,11 @@ public class ArticleController implements Controller {
   }
 
   private void deDelete(Rq rq) {
+    if(!rq.isLogined()) {
+      System.out.println("로그인 상태가 아닙니다.");
+      return;
+    }
+
     long id = rq.getLongParam("id", 0);
 
     if(id == 0) {
@@ -48,6 +54,11 @@ public class ArticleController implements Controller {
   }
 
   private void doModify(Rq rq) {
+    if(!rq.isLogined()) {
+      System.out.println("로그인 상태가 아닙니다.");
+      return;
+    }
+
     long id = rq.getLongParam("id", 0);
 
     if(id == 0) {
@@ -108,6 +119,11 @@ public class ArticleController implements Controller {
   }
 
   public void doWrite(Rq rq) {
+    if(!rq.isLogined()) {
+      System.out.println("로그인 상태가 아닙니다.");
+      return;
+    }
+
     System.out.println("== 게시글 작성 ==");
 
     System.out.print("제목 : ");
@@ -116,7 +132,10 @@ public class ArticleController implements Controller {
     System.out.print("내용 : ");
     String content = Container.sc.nextLine();
 
-    long id = articleService.create(title, content);
+    Member member = rq.getLoginedMember();
+    long memberId = member.getId();
+
+    long id = articleService.create(title, content, memberId);
 
     System.out.printf("%d번 게시물이 작성되었습니다.\n", id);
   }

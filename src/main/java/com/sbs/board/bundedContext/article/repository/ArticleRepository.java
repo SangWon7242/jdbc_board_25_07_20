@@ -15,13 +15,14 @@ public class ArticleRepository {
     articles = new ArrayList<>();
   }
 
-  public long save(String title, String content) {
+  public long save(String title, String content, long memberId) {
     Sql sql = Container.simpleDb.genSql();
     sql.append("INSERT INTO article");
     sql.append("SET regDate = NOW()");
     sql.append(", updateDate = NOW()");
     sql.append(", title = ?", title);
     sql.append(", content = ?", content);
+    sql.append(", memberId = ?", memberId);
 
     long id = sql.insert();
 
