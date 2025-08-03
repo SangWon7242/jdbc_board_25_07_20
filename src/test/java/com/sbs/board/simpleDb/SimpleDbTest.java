@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
@@ -413,6 +414,42 @@ public class SimpleDbTest {
         .append("INNER JOIN `member` M")
         .append("ON A.memberId = M.id")
         .append("WHERE A.content LIKE CONCAT('%', ?, '%')", searchKeyword);
+
+    Article article = sql.selectRow(Article.class);
+
+    assertThat(article.getId()).isEqualTo(1L);
+    assertThat(article.getRegDate()).isInstanceOf(LocalDateTime.class);
+    assertThat(article.getRegDate()).isNotNull();
+    assertThat(article.getUpdateDate()).isInstanceOf(LocalDateTime.class);
+    assertThat(article.getUpdateDate()).isNotNull();
+    assertThat(article.getTitle()).isEqualTo("제목 1");
+    assertThat(article.getContent()).isEqualTo("내용 1");
+    assertThat(article.getWriterName()).isEqualTo("user1");
+  }
+
+  @Test
+  @DisplayName("특정 키워드가 제목 또는 내용에 포함되어 있는 게시물 조회")
+  public void t14() {
+     /*
+    SELECT A.*,
+    M.username writerName
+    FROM article A
+    INNER JOIN `member` M
+    ON A.memberId = M.id
+    WHERE A.title LIKE '%제목 1%'
+    OR A.content LIKE '%내용 1%'
+    */
+
+    String searchKeyword = "내용 1";
+
+    Sql sql = simpleDb.genSql();
+    sql.append("SELECT A.*,")
+        .append("M.username writerName")
+        .append("FROM article A")
+        .append("INNER JOIN `member` M")
+        .append("ON A.memberId = M.id")
+        .append("WHERE A.content LIKE CONCAT('%', ?, '%')", searchKeyword)
+        .append("OR A.content LIKE CONCAT('%', ?, '%')", searchKeyword);
 
     Article article = sql.selectRow(Article.class);
 
