@@ -357,4 +357,39 @@ public class SimpleDbTest {
     assertThat(article.getContent()).isEqualTo("내용 1");
     assertThat(article.getWriterName()).isEqualTo("user1");
   }
+
+  @Test
+  @DisplayName("특정 키워드를 제목에 포함되어 있는 게시물 조회")
+  public void t12() {
+    /*
+    SELECT A.*,
+    M.username writerName
+    FROM article A
+    INNER JOIN `member` M
+    ON A.memberId = M.id
+    WHERE A.title LIKE '%제목%'
+    OR A.content LIKE '%제목%';
+    */
+
+    String searchKeyword = "제목 1";
+
+    Sql sql = simpleDb.genSql();
+    sql.append("SELECT A.*,")
+        .append("M.username writerName")
+        .append("FROM article A")
+        .append("INNER JOIN `member` M")
+        .append("ON A.memberId = M.id")
+        .append("WHERE A.title LIKE CONCAT('%', ?, '%')", searchKeyword);
+
+    Article article = sql.selectRow(Article.class);
+
+    assertThat(article.getId()).isEqualTo(1L);
+    assertThat(article.getRegDate()).isInstanceOf(LocalDateTime.class);
+    assertThat(article.getRegDate()).isNotNull();
+    assertThat(article.getUpdateDate()).isInstanceOf(LocalDateTime.class);
+    assertThat(article.getUpdateDate()).isNotNull();
+    assertThat(article.getTitle()).isEqualTo("제목 1");
+    assertThat(article.getContent()).isEqualTo("내용 1");
+    assertThat(article.getWriterName()).isEqualTo("user1");
+  }
 }
