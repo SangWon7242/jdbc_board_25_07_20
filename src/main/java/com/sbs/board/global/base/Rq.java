@@ -1,6 +1,7 @@
 package com.sbs.board.global.base;
 
 import com.sbs.board.bundedContext.container.Container;
+import com.sbs.board.bundedContext.member.dto.Member;
 import com.sbs.board.global.session.Session;
 import com.sbs.board.global.simpleDb.SimpleDb;
 import com.sbs.board.global.simpleDb.Sql;
@@ -97,5 +98,17 @@ public class Rq {
 
   public void removeSessionAttr(String key) {
     session.removeAttribute(key);
+  }
+
+  public void login(Object value) {
+    setSessionAttr(loginedMember, value);
+  }
+
+  public void logout() {
+    removeSessionAttr(loginedMember);
+  }
+
+  public Member getLoginedMember() {
+    return (Member) getSessionAttr(loginedMember);
   }
 }

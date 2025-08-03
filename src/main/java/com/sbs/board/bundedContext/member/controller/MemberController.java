@@ -20,8 +20,23 @@ public class MemberController implements Controller {
       case "/usr/member/join" -> doJoin(rq);
       case "/usr/member/login" -> doLogin(rq);
       case "/usr/member/logout" -> doLogout(rq);
+      case "/usr/member/mypage" -> showMyPage(rq);
       default -> System.out.println("알 수 없는 명령어입니다.");
     }
+  }
+
+  private void showMyPage(Rq rq) {
+    if(!rq.isLogined()) {
+      System.out.println("로그인 상태가 아닙니다.");
+      return;
+    }
+
+    Member member = rq.getLoginedMember();
+
+    System.out.println("== 마이페이지 ===");
+    System.out.printf("아이디 : %s\n", member.getUsername());
+    System.out.printf("이름 : %s\n", member.getName());
+    System.out.printf("가입일 : %s\n", member.getFormatRegDate());
   }
 
   private void doLogout(Rq rq) {
@@ -30,7 +45,8 @@ public class MemberController implements Controller {
       return;
     }
 
-    rq.removeSessionAttr("loginedMember");
+    rq.logout();
+
     System.out.println("로그아웃 되었습니다.");
   }
 
@@ -96,7 +112,7 @@ public class MemberController implements Controller {
     }
 
     // 세션에 로그인 데이터 저장
-    rq.setSessionAttr("loginedMember", member);
+    rq.login(member);
 
     System.out.println("로그인 되었습니다.");
   }
