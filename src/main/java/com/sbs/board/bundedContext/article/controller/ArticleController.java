@@ -149,14 +149,16 @@ public class ArticleController implements Controller {
     }
 
     System.out.println("== 게시글 목록 ==");
-    System.out.println("번호 | 제목 | 작성일");
+    System.out.println("번호 | 제목 | 작성일 | 작성자");
     System.out.println("-------------------");
     articles.forEach(article -> {
       long id = article.getId();
       String title = article.getTitle();
       String regDate = article.getFormatRegDate();
+      String writerName = article.getWriterName();
 
-      System.out.printf("%d | %s | %s\n", id, title, regDate);
+
+      System.out.printf("%d | %s | %s | %s\n", id, title, regDate, writerName);
     });
   }
 }
