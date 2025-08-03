@@ -116,6 +116,7 @@ public class ArticleController implements Controller {
     System.out.printf("내용 : %s\n",  article.getContent());
     System.out.printf("작성일 : %s\n", article.getFormatRegDate());
     System.out.printf("수정일 : %s\n", article.getFormatUpdateDate());
+    System.out.printf("작성자 : %s\n", article.getWriterName());
   }
 
   public void doWrite(Rq rq) {

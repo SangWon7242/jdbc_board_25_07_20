@@ -30,13 +30,6 @@ public class ArticleRepository {
   }
 
   public List<Article> findByOrderByIdDesc() {
-    /*
-    * SELECT A.*,
-M.username writerName
-FROM article A
-INNER JOIN `member` M
-ON A.memberId = M.id;*/
-
     Sql sql = Container.simpleDb.genSql();
     sql.append("SELECT A.*");
     sql.append(", M.username AS writerName");
@@ -54,9 +47,12 @@ ON A.memberId = M.id;*/
 
   public Article findById(long id) {
     Sql sql = Container.simpleDb.genSql();
-    sql.append("SELECT *");
-    sql.append("FROM article");
-    sql.append("WHERE id = ?", id);
+    sql.append("SELECT A.*");
+    sql.append(", M.username AS writerName");
+    sql.append("FROM article A");
+    sql.append("INNER JOIN `member` M");
+    sql.append("ON A.memberId = M.id");
+    sql.append("WHERE A.id = ?", id);
 
     Article article = sql.selectRow(Article.class);
 
