@@ -12,4 +12,5 @@ public class Article extends BaseDto {
   private String title;
   private String content;
   private int memberId;
+  private String writerName;
 }

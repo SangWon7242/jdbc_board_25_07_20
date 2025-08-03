@@ -23,15 +23,16 @@ public class SimpleDbTest {
     simpleDb.setDevMode(true); // 개발 모드 활성화 (디버깅을 위해 SQL 쿼리 출력)
 
     createArticleTable();
+    createMemberTable();
   }
 
   @BeforeEach // 각 테스트 메서드 실행 전에 실행
   public void beforeEach() {
+    simpleDb.run("TRUNCATE `member`");
     simpleDb.run("TRUNCATE article"); // article 테이블 초기화
 
+    makeMemberTestData();
     makeArticleTestData(); // 테스트 데이터 생성
-
-    createMemberTable();
   }
 
   private void makeArticleTestData() {
@@ -48,6 +49,24 @@ public class SimpleDbTest {
       sql.append(", title = ?", title);
       sql.append(", content = ?", content);
       sql.append(", memberId = ?", memberId);
+
+      sql.insert();
+    });
+  }
+
+  private void makeMemberTestData() {
+    IntStream.rangeClosed(1, 3).forEach(i -> {
+      String username = "user%d".formatted(i);
+      String password = "1234";
+      String name = "이름 %d".formatted(i);
+
+      Sql sql = simpleDb.genSql();
+      sql.append("INSERT INTO `member`");
+      sql.append("SET regDate = NOW()");
+      sql.append(", updateDate = NOW()");
+      sql.append(", username = ?", username);
+      sql.append(", password = ?", password);
+      sql.append(", name = ?", name);
 
       sql.insert();
     });
@@ -290,7 +309,7 @@ public class SimpleDbTest {
   @Test
   @DisplayName("회원 1명 추가")
   public void t10() {
-    String username = "user1";
+    String username = "user4";
     String password = "1234";
     String name = "홍길동";
 
@@ -304,6 +323,38 @@ public class SimpleDbTest {
 
     long newId = sql.insert();
 
-    assertThat(newId).isEqualTo(1L);
+    assertThat(newId).isEqualTo(4L);
+  }
+
+  @Test
+  @DisplayName("게시물 작성자 번호를 통한 게시물 조회")
+  public void t11() {
+    /*
+    SELECT A.*,
+    M.username writerName
+    FROM article A
+    INNER JOIN `member` M
+    ON A.memberId = M.id
+    WHERE M.id = 1;
+    */
+
+    Sql sql = simpleDb.genSql();
+    sql.append("SELECT A.*,")
+        .append("M.username writerName")
+        .append("FROM article A")
+        .append("INNER JOIN `member` M")
+        .append("ON A.memberId = M.id")
+        .append("WHERE M.id = ?", 1);
+
+    Article article = sql.selectRow(Article.class);
+
+    assertThat(article.getId()).isEqualTo(1L);
+    assertThat(article.getRegDate()).isInstanceOf(LocalDateTime.class);
+    assertThat(article.getRegDate()).isNotNull();
+    assertThat(article.getUpdateDate()).isInstanceOf(LocalDateTime.class);
+    assertThat(article.getUpdateDate()).isNotNull();
+    assertThat(article.getTitle()).isEqualTo("제목 1");
+    assertThat(article.getContent()).isEqualTo("내용 1");
+    assertThat(article.getWriterName()).isEqualTo("user1");
   }
 }
