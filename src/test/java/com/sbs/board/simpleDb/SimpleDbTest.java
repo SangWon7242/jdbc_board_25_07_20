@@ -35,6 +35,8 @@ public class SimpleDbTest {
   }
 
   private void makeArticleTestData() {
+    int memberId = 1;
+
     IntStream.rangeClosed(1, 5).forEach(i -> {
       String title = "제목 %d".formatted(i);
       String content = "내용 %d".formatted(i);
@@ -45,6 +47,7 @@ public class SimpleDbTest {
       sql.append(", updateDate = NOW()");
       sql.append(", title = ?", title);
       sql.append(", content = ?", content);
+      sql.append(", memberId = ?", memberId);
 
       sql.insert();
     });
@@ -59,7 +62,8 @@ public class SimpleDbTest {
         	regDate DATETIME NOT NULL,
         	updateDate DATETIME NOT NULL,
         	title CHAR(100) NOT NULL,
-        	content TEXT NOT NULL
+        	content TEXT NOT NULL,
+        	memberId INT UNSIGNED NOT NULL
         )
         """);
   }
@@ -82,19 +86,11 @@ public class SimpleDbTest {
   @Test
   @DisplayName("INSERT 테스트")
   public void t1() {
+    int memberId = 1;
+
     int no = 6;
     String title = "제목 %d".formatted(no);
     String content = "내용 %d".formatted(no);
-
-    /*
-    simpleDb.run("""
-         INSERT INTO article
-          SET regDate = NOW(),
-          updateDate = NOW(),
-          title = ?,
-          content = ?
-        """, title, content);
-     */
 
     Sql sql = simpleDb.genSql();
     sql.append("INSERT INTO article");
@@ -102,6 +98,7 @@ public class SimpleDbTest {
     sql.append(", updateDate = NOW()");
     sql.append(", title = ?", title);
     sql.append(", content = ?", content);
+    sql.append(", memberId = ?", memberId);
 
     long newId = sql.insert(); // Auto Increment ID 반환
 
