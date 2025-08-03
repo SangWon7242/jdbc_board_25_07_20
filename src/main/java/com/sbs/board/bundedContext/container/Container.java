@@ -6,14 +6,16 @@ import com.sbs.board.bundedContext.article.service.ArticleService;
 import com.sbs.board.bundedContext.member.controller.MemberController;
 import com.sbs.board.bundedContext.member.repository.MemberRepository;
 import com.sbs.board.bundedContext.member.service.MemberService;
+import com.sbs.board.global.session.Session;
 import com.sbs.board.global.simpleDb.SimpleDb;
-import com.sun.source.tree.MemberReferenceTree;
 
 import java.util.Scanner;
 
 public class Container {
   public static Scanner sc;
   public static SimpleDb simpleDb;
+
+  public static Session session;
 
   public static MemberRepository memberRepository;
   public static ArticleRepository articleRepository;
@@ -27,6 +29,8 @@ public class Container {
   public static void init(SimpleDb dbInfo) {
     sc = new Scanner(System.in);
     simpleDb = dbInfo;
+
+    session = new Session();
 
     memberRepository = new MemberRepository();
     articleRepository = new ArticleRepository();

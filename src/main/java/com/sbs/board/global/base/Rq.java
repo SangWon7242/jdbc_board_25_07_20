@@ -1,5 +1,7 @@
 package com.sbs.board.global.base;
 
+import com.sbs.board.bundedContext.container.Container;
+import com.sbs.board.global.session.Session;
 import com.sbs.board.global.simpleDb.SimpleDb;
 import com.sbs.board.global.simpleDb.Sql;
 import com.sbs.board.global.util.Ut;
@@ -17,6 +19,9 @@ public class Rq {
   @Getter
   private String urlPath;
 
+  private Session session;
+  private String loginedMember = "loginedMember";
+
   @Getter
   @Setter
   private String controllerTypeCode;
@@ -29,10 +34,14 @@ public class Rq {
   @Setter
   private String actionMethodName;
 
+  public Rq() {
+    session = Container.session;
+  }
+
   public String getActionPath() {
     String[] commandBits = urlPath.split("/");
 
-    if(commandBits.length < 4) {
+    if (commandBits.length < 4) {
       return null;
     }
     // /usr/article/list
@@ -66,5 +75,27 @@ public class Rq {
     if (!params.containsKey(paramName)) return defaultValue;
 
     return params.get(paramName);
+  }
+
+  // 로그인 여부 확인
+  public boolean isLogined() {
+    return hasSessionAttr(loginedMember);
+  }
+
+  // 세션 관련 메소드
+  public void setSessionAttr(String key, Object value) {
+    session.setAttribute(key, value);
+  }
+
+  public Object getSessionAttr(String key) {
+    return session.getAttribute(key);
+  }
+
+  public boolean hasSessionAttr(String key) {
+    return session.hasAttribute(key);
+  }
+
+  public void removeSessionAttr(String key) {
+    session.removeAttribute(key);
   }
 }

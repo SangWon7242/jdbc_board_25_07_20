@@ -3,13 +3,9 @@ package com.sbs.board.bundedContext.member.controller;
 
 import com.sbs.board.bundedContext.common.controller.Controller;
 import com.sbs.board.bundedContext.container.Container;
+import com.sbs.board.bundedContext.member.dto.Member;
 import com.sbs.board.bundedContext.member.service.MemberService;
 import com.sbs.board.global.base.Rq;
-import com.sbs.board.global.simpleDb.Sql;
-
-import com.sbs.board.bundedContext.member.dto.Member;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MemberController implements Controller {
   private MemberService memberService;
@@ -23,16 +19,32 @@ public class MemberController implements Controller {
     switch (rq.getUrlPath()) {
       case "/usr/member/join" -> doJoin(rq);
       case "/usr/member/login" -> doLogin(rq);
+      case "/usr/member/logout" -> doLogout(rq);
       default -> System.out.println("알 수 없는 명령어입니다.");
     }
   }
 
+  private void doLogout(Rq rq) {
+    if(!rq.isLogined()) {
+      System.out.println("로그인 상태가 아닙니다.");
+      return;
+    }
+
+    rq.removeSessionAttr("loginedMember");
+    System.out.println("로그아웃 되었습니다.");
+  }
+
   private void doLogin(Rq rq) {
+    if(rq.isLogined()) {
+      System.out.println("이미 로그인 상태입니다.");
+      return;
+    }
+
     String username;
     String password;
     Member member;
 
-    System.out.println("== 회원 가입 ===");
+    System.out.println("== 로그인 ===");
 
     // username 입력
     while (true) {
@@ -82,6 +94,9 @@ public class MemberController implements Controller {
 
       break;
     }
+
+    // 세션에 로그인 데이터 저장
+    rq.setSessionAttr("loginedMember", member);
 
     System.out.println("로그인 되었습니다.");
   }
