@@ -79,4 +79,22 @@ public class ArticleRepository {
 
     sql.delete();
   }
+
+  public List<Article> findByContainsSearchKeyword(String searchKeyword) {
+    Sql sql = Container.simpleDb.genSql();
+    sql.append("SELECT A.*");
+    sql.append(", M.username AS writerName");
+    sql.append("FROM article A");
+    sql.append("INNER JOIN `member` M");
+    sql.append("ON A.memberId = M.id");
+    sql.append("WHERE A.title LIKE CONCAT('%', ?, '%')", searchKeyword);
+    sql.append("OR A.content LIKE CONCAT('%', ?, '%')", searchKeyword);
+    sql.append("ORDER BY A.id DESC");
+
+    List<Article> articles = sql.selectRows(Article.class);
+
+    if(articles == null) return null;
+
+    return articles;
+  }
 }

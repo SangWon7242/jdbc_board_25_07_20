@@ -142,7 +142,9 @@ public class ArticleController implements Controller {
   }
 
   public void showList(Rq rq) {
-    List<Article> articles = articleService.findByOrderByIdDesc();
+    String searchKeyword = rq.getParam("searchKeyword", "");
+
+    List<Article> articles = articleService.findByOrderByIdDesc(searchKeyword);
 
     if(articles == null) {
       System.out.println("게시글이 존재하지 않습니다.");

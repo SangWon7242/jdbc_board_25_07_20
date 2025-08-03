@@ -17,7 +17,15 @@ public class ArticleService {
     return articleRepository.save(title, content, memberId);
   }
 
-  public List<Article> findByOrderByIdDesc() {
+  public List<Article> findByContainsSearchKeyword(String searchKeyword) {
+    return articleRepository.findByContainsSearchKeyword(searchKeyword);
+  }
+
+  public List<Article> findByOrderByIdDesc(String searchKeyword) {
+    if(searchKeyword != null && !searchKeyword.isEmpty()) {
+      findByContainsSearchKeyword(searchKeyword);
+    }
+
     return articleRepository.findByOrderByIdDesc();
   }
 
