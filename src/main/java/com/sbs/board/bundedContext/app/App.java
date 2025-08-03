@@ -25,7 +25,14 @@ public class App {
     while (true) {
       Rq rq = new Rq();
 
-      System.out.print("명령어) ");
+      String promptName = "명령어";
+
+      if(rq.isLogined()) {
+        promptName = "%s님".formatted(rq.getLoginedMember().getUsername());
+      }
+
+      System.out.printf("%s) ", promptName);
+
       String cmd = Container.sc.nextLine().trim();
 
       rq.setCommand(cmd);
