@@ -29,21 +29,21 @@ public class ArticleController implements Controller {
   }
 
   private void deDelete(Rq rq) {
-    if(!rq.isLogined()) {
+    if (!rq.isLogined()) {
       System.out.println("로그인 상태가 아닙니다.");
       return;
     }
 
     long id = rq.getLongParam("id", 0);
 
-    if(id == 0) {
+    if (id == 0) {
       System.out.println("올바른 값을 입력해주세요.");
       return;
     }
 
     Article article = articleService.findById(id);
 
-    if(article == null) {
+    if (article == null) {
       System.out.printf("%d번 게시글은 존재하지 않습니다.\n", id);
       return;
     }
@@ -54,21 +54,21 @@ public class ArticleController implements Controller {
   }
 
   private void doModify(Rq rq) {
-    if(!rq.isLogined()) {
+    if (!rq.isLogined()) {
       System.out.println("로그인 상태가 아닙니다.");
       return;
     }
 
     long id = rq.getLongParam("id", 0);
 
-    if(id == 0) {
+    if (id == 0) {
       System.out.println("올바른 값을 입력해주세요.");
       return;
     }
 
     Article article = articleService.findById(id);
 
-    if(article == null) {
+    if (article == null) {
       System.out.printf("%d번 게시글은 존재하지 않습니다.\n", id);
       return;
     }
@@ -77,7 +77,7 @@ public class ArticleController implements Controller {
     System.out.print("제목 : ");
     String title = Container.sc.nextLine();
 
-    if(title == null || title.trim().isEmpty()) {
+    if (title == null || title.trim().isEmpty()) {
       System.out.println("제목을 입력해주세요.");
       return;
     }
@@ -85,7 +85,7 @@ public class ArticleController implements Controller {
     System.out.print("내용 : ");
     String content = Container.sc.nextLine();
 
-    if(content == null || content.trim().isEmpty()) {
+    if (content == null || content.trim().isEmpty()) {
       System.out.println("내용을 입력해주세요.");
       return;
     }
@@ -98,29 +98,29 @@ public class ArticleController implements Controller {
   private void showDetail(Rq rq) {
     long id = rq.getLongParam("id", 0);
 
-    if(id == 0) {
+    if (id == 0) {
       System.out.println("올바른 값을 입력해주세요.");
       return;
     }
 
     Article article = articleService.findById(id);
 
-    if(article == null) {
+    if (article == null) {
       System.out.printf("%d번 게시글은 존재하지 않습니다.\n", id);
       return;
     }
 
     System.out.println("== 게시글 상세 ==");
     System.out.printf("번호 : %d\n", article.getId());
-    System.out.printf("제목 : %s\n",  article.getTitle());
-    System.out.printf("내용 : %s\n",  article.getContent());
+    System.out.printf("제목 : %s\n", article.getTitle());
+    System.out.printf("내용 : %s\n", article.getContent());
     System.out.printf("작성일 : %s\n", article.getFormatRegDate());
     System.out.printf("수정일 : %s\n", article.getFormatUpdateDate());
     System.out.printf("작성자 : %s\n", article.getWriterName());
   }
 
   public void doWrite(Rq rq) {
-    if(!rq.isLogined()) {
+    if (!rq.isLogined()) {
       System.out.println("로그인 상태가 아닙니다.");
       return;
     }
@@ -143,10 +143,11 @@ public class ArticleController implements Controller {
 
   public void showList(Rq rq) {
     String searchKeyword = rq.getParam("searchKeyword", "");
+    String searchType = rq.getParam("searchType", "");
 
-    List<Article> articles = articleService.findByOrderByIdDesc(searchKeyword);
+    List<Article> articles = articleService.findByOrderByIdDesc(searchKeyword, searchType);
 
-    if(articles == null) {
+    if (articles == null || articles.isEmpty()) {
       System.out.println("게시글이 존재하지 않습니다.");
       return;
     }

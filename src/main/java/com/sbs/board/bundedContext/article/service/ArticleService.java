@@ -17,13 +17,13 @@ public class ArticleService {
     return articleRepository.save(title, content, memberId);
   }
 
-  public List<Article> findByContainsSearchKeyword(String searchKeyword) {
-    return articleRepository.findByContainsSearchKeyword(searchKeyword);
+  public List<Article> findByContainsSearchKeyword(String searchKeyword, String searchType) {
+    return articleRepository.findByContainsSearchKeyword(searchKeyword, searchType);
   }
 
-  public List<Article> findByOrderByIdDesc(String searchKeyword) {
+  public List<Article> findByOrderByIdDesc(String searchKeyword, String searchType) {
     if(searchKeyword != null && !searchKeyword.isEmpty()) {
-      findByContainsSearchKeyword(searchKeyword);
+      return findByContainsSearchKeyword(searchKeyword, searchType);
     }
 
     return articleRepository.findByOrderByIdDesc();

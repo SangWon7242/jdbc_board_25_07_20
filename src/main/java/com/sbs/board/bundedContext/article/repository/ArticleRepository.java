@@ -6,7 +6,6 @@ import com.sbs.board.global.simpleDb.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ArticleRepository {
   private List<Article> articles;
@@ -80,15 +79,25 @@ public class ArticleRepository {
     sql.delete();
   }
 
-  public List<Article> findByContainsSearchKeyword(String searchKeyword) {
+  public List<Article> findByContainsSearchKeyword(String searchKeyword, String searchType) {
     Sql sql = Container.simpleDb.genSql();
     sql.append("SELECT A.*");
     sql.append(", M.username AS writerName");
     sql.append("FROM article A");
     sql.append("INNER JOIN `member` M");
     sql.append("ON A.memberId = M.id");
-    sql.append("WHERE A.title LIKE CONCAT('%', ?, '%')", searchKeyword);
-    sql.append("OR A.content LIKE CONCAT('%', ?, '%')", searchKeyword);
+
+    if(searchKeyword.trim().isEmpty() || searchType.trim().isEmpty()) {
+      return null;
+    } else if(searchType.equals("title")) {
+      sql.append("WHERE A.title LIKE CONCAT('%', ?, '%')", searchKeyword);
+    } else if(searchType.equals("content")) {
+      sql.append("WHERE A.content LIKE CONCAT('%', ?, '%')", searchKeyword);
+    } else if(searchType.equals("title,content")) {
+      sql.append("WHERE A.title LIKE CONCAT('%', ?, '%')", searchKeyword);
+      sql.append("OR A.content LIKE CONCAT('%', ?, '%')", searchKeyword);
+    }
+
     sql.append("ORDER BY A.id DESC");
 
     List<Article> articles = sql.selectRows(Article.class);
